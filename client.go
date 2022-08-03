@@ -4,7 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"io/ioutil"
+	"fmt"
+	"io"
 	"net/http"
 )
 
@@ -14,14 +15,12 @@ type Client struct {
 	BaseUrl    string
 }
 
-var defaultValues = Client{
-	HttpClient: http.DefaultClient,
-	UserAgent:  "Samsung Smart Fridge",
-	BaseUrl:    "https://api.minehut.com",
-}
-
 func NewClient() *Client {
-	return &defaultValues
+	return &Client{
+		HttpClient: http.DefaultClient,
+		UserAgent:  "Samsung Smart Fridge",
+		BaseUrl:    "https://api.minehut.com",
+	}
 }
 
 func (c *Client) newRequest(method, url string, body interface{}) (*http.Request, error) {
@@ -42,6 +41,10 @@ func (c *Client) newRequest(method, url string, body interface{}) (*http.Request
 
 	req.Header.Add("User-Agent", c.UserAgent)
 
+	if body != nil {
+		req.Header.Add("Content-Type", "application/json")
+	}
+
 	return req, nil
 }
 
@@ -58,8 +61,8 @@ func (c *Client) MakeRequest(method, url string, body interface{}) ([]byte, erro
 	defer res.Body.Close()
 
 	if 200 < res.StatusCode || res.StatusCode > 299 {
-		return nil, errors.New("status code not 2xx")
+		return nil, errors.New("status code not 2xx - " + fmt.Sprint(res.StatusCode))
 	}
 
-	return ioutil.ReadAll(res.Body)
+	return io.ReadAll(res.Body)
 }
