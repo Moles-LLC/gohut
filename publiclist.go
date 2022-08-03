@@ -9,6 +9,7 @@ import (
 )
 
 func parseServerInList(g gjson.Result) *Server {
+	// I know this is stupid, but I cba making more structs for json parsing
 	return &Server{
 		Banner: struct {
 			Image string `json:"image"`
@@ -39,7 +40,7 @@ func parseServerInList(g gjson.Result) *Server {
 	}
 }
 
-func (c *Client) GetPublicServersPage(query string, limit int, offset int) ([]*Server, int, error) {
+func (c *Client) GetPublicServerList(query string, limit int, offset int) ([]*Server, int, error) {
 	body, err := c.MakeRequest(http.MethodGet, c.BaseUrl+"/servers?q="+query+"&limit="+fmt.Sprintf("%d", limit)+"&offset="+fmt.Sprintf("%d", offset), nil)
 	if err != nil {
 		return nil, 0, err
@@ -59,8 +60,8 @@ func (c *Client) GetPublicServersPage(query string, limit int, offset int) ([]*S
 	return servers, total, nil
 }
 
-func (c *Client) GetPublicServers(query string) ([]*Server, error) {
-	firstServers, totalServers, err := c.GetPublicServersPage(query, 100, 0)
+func (c *Client) GetPublicServerListDetails(query string) ([]*Server, error) {
+	firstServers, totalServers, err := c.GetPublicServerList(query, 100, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +79,7 @@ func (c *Client) GetPublicServers(query string) ([]*Server, error) {
 
 		for i := 100; i < totalServers; i += 100 {
 			go func(i int) {
-				goServers, _, err := c.GetPublicServersPage(query, 100, i)
+				goServers, _, err := c.GetPublicServerList(query, 100, i)
 
 				defer func() {
 					channel <- &Server{
