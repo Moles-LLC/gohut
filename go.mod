@@ -1,4 +1,4 @@
-module github.com/honbradev/gohut
+module github.com/moles-llc/gohut
 
 go 1.18
 
