@@ -48,7 +48,7 @@ func (c *Client) newRequest(method, url string, body interface{}) (*http.Request
 	return req, nil
 }
 
-func (c *Client) MakeRequest(method, url string, body interface{}) ([]byte, error) {
+func (c *Client) MakeRequest(method, url string, body any) ([]byte, error) {
 	req, err := c.newRequest(method, url, body)
 	if err != nil {
 		return nil, err
