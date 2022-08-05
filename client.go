@@ -9,6 +9,8 @@ import (
 	"net/http"
 )
 
+var DefaultClient = NewClient()
+
 type Client struct {
 	HttpClient *http.Client
 	UserAgent  string
