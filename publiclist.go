@@ -41,7 +41,7 @@ func parseServerInList(g gjson.Result) *Server {
 }
 
 func (c *Client) GetPublicServerList(query string, limit int, offset int) ([]*Server, int, error) {
-	body, err := c.MakeRequest(http.MethodGet, c.BaseUrl+"/servers?q="+query+"&limit="+fmt.Sprintf("%d", limit)+"&offset="+fmt.Sprintf("%d", offset), nil)
+	body, err := c.MakeRequest(http.MethodGet, c.BaseUrl+"/servers?q="+query+"&limit="+fmt.Sprintf("%d", limit)+"&offset="+fmt.Sprintf("%d", offset), nil, false)
 	if err != nil {
 		return nil, 0, err
 	}

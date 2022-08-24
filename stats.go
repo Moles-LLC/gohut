@@ -25,7 +25,7 @@ func parseSimpleStatsResponse(g gjson.Result) *SimpleStatsResponse {
 }
 
 func (c *Client) GetSimpleStats() (*SimpleStatsResponse, error) {
-	body, err := c.MakeRequest(http.MethodGet, c.BaseUrl+"/network/simple_stats", nil)
+	body, err := c.MakeRequest(http.MethodGet, c.BaseUrl+"/network/simple_stats", nil, false)
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +72,7 @@ func parsePlayerDistributionResponse(g gjson.Result) *PlayerDistributionResponse
 }
 
 func (c *Client) GetPlayerDistribution() (*PlayerDistributionResponse, error) {
-	body, err := c.MakeRequest(http.MethodGet, c.BaseUrl+"/network/players/distribution", nil)
+	body, err := c.MakeRequest(http.MethodGet, c.BaseUrl+"/network/players/distribution", nil, false)
 	if err != nil {
 		return nil, err
 	}

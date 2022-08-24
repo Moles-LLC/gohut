@@ -76,7 +76,7 @@ func (c *Client) getServer(id string, name bool) (*Server, error) {
 		url += "?byName=true"
 	}
 
-	body, err := c.MakeRequest(http.MethodGet, url, nil)
+	body, err := c.MakeRequest(http.MethodGet, url, nil, false)
 	if err != nil {
 		return nil, err
 	}

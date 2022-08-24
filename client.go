@@ -15,6 +15,10 @@ type Client struct {
 	HttpClient *http.Client
 	UserAgent  string
 	BaseUrl    string
+
+	AccessToken string
+	ProfileID   string
+	SessionID   string
 }
 
 func NewClient() *Client {
@@ -25,7 +29,7 @@ func NewClient() *Client {
 	}
 }
 
-func (c *Client) newRequest(method, url string, body interface{}) (*http.Request, error) {
+func (c *Client) newRequest(method, url string, body interface{}, authenticate bool) (*http.Request, error) {
 	var rawBody []byte
 	var err error
 
@@ -47,11 +51,17 @@ func (c *Client) newRequest(method, url string, body interface{}) (*http.Request
 		req.Header.Add("Content-Type", "application/json")
 	}
 
+	if authenticate {
+		req.Header.Add("Authorization", "Bearer "+c.AccessToken)
+		req.Header.Add("x-profile-id", c.ProfileID)
+		req.Header.Add("x-session-id", c.SessionID)
+	}
+
 	return req, nil
 }
 
-func (c *Client) MakeRequest(method, url string, body any) ([]byte, error) {
-	req, err := c.newRequest(method, url, body)
+func (c *Client) MakeRequest(method, url string, body any, authenticate bool) ([]byte, error) {
+	req, err := c.newRequest(method, url, body, authenticate)
 	if err != nil {
 		return nil, err
 	}
